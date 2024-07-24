@@ -8,7 +8,6 @@ class ApiPolling {
 
   ApiPolling() {
     // Periodically fetch data from the API every 5 seconds
-    Stream.periodic(Duration(seconds: 5))
     Stream.periodic(Duration(seconds: 1))
         .asyncMap((_) => fetchDataFromApi())
         .listen((data) {
