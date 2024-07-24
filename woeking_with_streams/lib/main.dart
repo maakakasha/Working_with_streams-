@@ -55,12 +55,52 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'You are establishing a streamm connection:',
+              style: TextStyle(
+                fontSize: 24,
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            const SizedBox(
+              height: 20,
             ),
+            StreamBuilder(
+              stream: apiPolling.dataStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return const Text(
+                    'Something went wrong loading your data',
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  );
+                }
+                var data = snapshot.data!;
+                return Column(
+                  children: [
+                    Text(
+                      '${data['results'][0]['name']}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                    Text(
+                      '${data['results'][0]['name']['title']}, ${data['results'][0]['name']['first']}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                    Text(
+                      '${data['results'][0]['name']['last']}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            )
           ],
         ),
       ),
@@ -69,9 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
           _incrementCounter;
           // streamsHandlerInstance.initializeStreaming();
           // streamsHandlerInstance.periodicStreming();
-          apiPolling.dataStream.listen((data) {
-            print('New data: $data');
-          });
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
